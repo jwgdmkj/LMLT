@@ -29,6 +29,7 @@ You can train LMLT following commands below
 ```
 python3 basicsr/train.py -opt options/train/LMLT/train_tiny(base, large)_DF2K_X2(3, 4).yml
 ```
+And also, we set `torch.backends.cudnn.benchmark` to `True`. If you want to get fixed output, you should set it to `False` and set `torch.backends.cudnn.deterministic` to `True`.
 
 
 ### Test
