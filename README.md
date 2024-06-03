@@ -19,11 +19,21 @@ And also, you'd better extract subimages using
 ```
 python3 scripts/data_preparation/extract_subimages.py
 ```
+By running the code above, you may get subimages of training datasets.
+
 
 ### Training
+You can train LMLT following commands below 
+```
+python3 basicsr/train.py -opt options/train/LMLT/train_tiny(base, large)_DF2K_X2(3, 4).yml
+```
 
 
 ### Test
+You can test LMLT following commands below
+```
+python3 basicsr/test.py -opt options/test/LMLT/test_tiny(base, large)_benchmark_X2(3, 4).yml
+```
 
 
 ### Results
