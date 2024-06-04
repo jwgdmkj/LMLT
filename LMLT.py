@@ -12,10 +12,7 @@ from pdb import set_trace as st
 import numpy as np
 
 f"""
-safnm_arch_our_linear.py
-
-qkv와 proj를 conv@11에서, linear(dim)으로 변경
-4개로 chan을 chunk하고, 1, 1/2, 1/4, 1/8로 downsample하여 각각에 대해 8x8 window를 적용
+LMLT.py
 """
 # df2k download : https://github.com/dslisleedh/Download_df2k/blob/main/download_df2k.sh
 # dataset prepare : https://github.com/XPixelGroup/BasicSR/blob/master/docs/DatasetPreparation.md
@@ -222,7 +219,6 @@ class downsample_vit(nn.Module):
         
         ################################
         # 2. make qkv
-        # qkv를 conv@11로 구현.
         ################################
         qkv = self.qkv(x_window)
         # qkv = qkv.permute(0,2,3,1)
@@ -255,8 +251,8 @@ class downsample_vit(nn.Module):
 
 
 ##############################################################
-## SAFM - split dim and define 4 attn blocks
-class SAFM(nn.Module):
+## LHSB - split dim and define 4 attn blocks
+class LHSB(nn.Module):
     def __init__(self,
                  dim,  
                  attn_drop=0.,
@@ -276,7 +272,7 @@ class SAFM(nn.Module):
                            down_scale=2**i)
             for i in range(self.n_levels)])
         
-        # Feature Aggregation
+        # # Feature Aggregation
         self.aggr = nn.Conv2d(dim, dim, 1, 1, 0)
         
         # Activation
@@ -313,7 +309,6 @@ class SAFM(nn.Module):
         out = self.act(out) * x
         return out
 
-
 ##############################################################
 ## Block
 class AttBlock(nn.Module):
@@ -330,7 +325,7 @@ class AttBlock(nn.Module):
         self.norm2 = LayerNorm(dim) 
 
         # Multiscale Block
-        self.safm = SAFM(dim, 
+        self.lhsb = LHSB(dim, 
                          attn_drop=attn_drop, 
                          proj_drop=drop) 
         
@@ -338,7 +333,7 @@ class AttBlock(nn.Module):
         self.ccm = CCM(dim, ffn_scale) 
 
     def forward(self, x):
-        x = self.safm(self.norm1(x)) + x
+        x = self.lhsb(self.norm1(x)) + x
         x = self.ccm(self.norm2(x)) + x
         return x
         
@@ -346,7 +341,7 @@ class AttBlock(nn.Module):
 ##############################################################
 ## Overall Architecture
 @ARCH_REGISTRY.register()
-class SAFMN(nn.Module):
+class LMLT(nn.Module):
     def __init__(self, 
                  dim, 
                  n_blocks=8, 
@@ -410,13 +405,13 @@ class SAFMN(nn.Module):
 if __name__== '__main__':
     #############Test Model Complexity #############
     from fvcore.nn import flop_count_table, FlopCountAnalysis, ActivationCountAnalysis    
-    x = torch.randn(1, 3, 640, 360)
+    # x = torch.randn(1, 3, 640, 360)
     # x = torch.randn(1, 3, 427, 240)
-    # x = torch.randn(1, 3, 320, 180)
-    # x = torch.randn(1, 3, 64, 64)
+    x = torch.randn(1, 3, 320, 180)
+    # x = torch.randn(1, 3, 256, 256)
 
-    model = SAFMN(dim=48, n_blocks=8, ffn_scale=2.0, upscaling_factor=2)
-    # model = SAFMN(dim=36, n_blocks=12, ffn_scale=2.0, upscaling_factor=2)
+    model = LMLT(dim=36, n_blocks=8, ffn_scale=2.0, upscaling_factor=4)
+    # model = LMLT(dim=36, n_blocks=12, ffn_scale=2.0, upscaling_factor=2)
     print(model)
     print(f'params: {sum(map(lambda x: x.numel(), model.parameters()))}')
     print(flop_count_table(FlopCountAnalysis(model, x), activations=ActivationCountAnalysis(model, x)))
