@@ -1,5 +1,9 @@
 # LMLT(Low-to-high Multi-Level Vision Transformer)
 
+Jeongsoo Kim, Jongho Nang, Junsuk Choe<sup>*</sup>
+
+<sup>*</sup> : Corresponding author
+
 ### Requirements
 ```
 # Install Packages
