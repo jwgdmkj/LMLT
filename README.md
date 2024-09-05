@@ -44,5 +44,5 @@ python3 basicsr/test.py -opt options/test/LMLT/test_tiny(base, large)_benchmark_
 
 
 ### Results
-We provide visual results of LMLT_Base x4 scale. 
+We will provide visual results of LMLT_Base x4 scale soon. 
 If you want to see only architecture, refer to `LMLT.py`.
