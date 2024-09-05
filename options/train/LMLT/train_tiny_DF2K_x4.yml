@@ -9,8 +9,8 @@ datasets:
   train:
     name: DF2K
     type: PairedImageDataset
-    dataroot_gt: /data/ECCV/SR/df2k/datasets/DF2K/DF2K_train_HR_sub
-    dataroot_lq: /data/ECCV/SR/df2k/datasets/DF2K/DF2K_train_LR_bicubic/X4_sub
+    dataroot_gt: /data/SR/df2k/datasets/DF2K/DF2K_train_HR_sub
+    dataroot_lq: /data/SR/df2k/datasets/DF2K/DF2K_train_LR_bicubic/X4_sub
     filename_tmpl: '{}'
     io_backend:
       type: disk
