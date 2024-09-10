@@ -16,7 +16,7 @@ python3 setup.py develop
 
 
 ### Dataset
-We use DIV2K, Flickr2K as Training dataset.
+We used DIV2K, Flickr2K as Training dataset.
 You can download two datasets at https://github.com/dslisleedh/Download_df2k/blob/main/download_df2k.sh
 and prepare other test datasets at https://github.com/XPixelGroup/BasicSR/blob/master/docs/DatasetPreparation.md#Common-Image-SR-Datasets
 
@@ -45,4 +45,4 @@ python3 basicsr/test.py -opt options/test/LMLT/test_tiny(base, large)_benchmark_
 
 ### Results
 We will provide visual results of LMLT_Base x4 scale soon. 
-If you want to see only architecture, refer to `LMLT.py`.
+If you want to see only architecture, please refer to `LMLT.py`.
