@@ -70,7 +70,7 @@ network_g:
 # path
 # /data/ECCV/SS/weights/LMLT_re_x4.pth
 path:
-  pretrain_network_g: /data/ECCV/SS/weights/mine_x3.pth
+  pretrain_network_g:  /workspace/LMLT/experiments/pretrained_model/LMLT_tiny_x3_new.pth
   strict_load_g: true
 
 # validation settings
