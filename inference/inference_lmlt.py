@@ -52,7 +52,7 @@ def main(args):
     util.mkdir(save_path)
     
     # Set log file
-    log_file = osp.join(args.log_path, args.model_name, f'SAFMN_runtime_test_.log')
+    log_file = osp.join(args.log_path, args.model_name, f'LMLT_runtime_test_.log')
     logger = get_root_logger(logger_name='Runtime', log_level=logging.INFO, log_file=log_file)
 
     logger.info(torch.__version__)               # pytorch version
@@ -68,7 +68,7 @@ def main(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Define network and load model
-    model = LMLT(dim=36, n_blocks=8, ffn_scale=2.0, upscaling_factor=4)
+    model = LMLT(dim=36, n_blocks=8, ffn_scale=2.0, upscaling_factor=2)
     model.load_state_dict(torch.load(args.pretrain_model)['params'], strict=True)
     
     model.eval()
@@ -115,7 +115,7 @@ def main(args):
         start.record()
         
         img_E = model(img_L)
-        # logger.info('{:>16s} : {:<.3f} [M]'.format('Max Memery', torch.cuda.max_memory_allocated(torch.cuda.current_device())/1024**2))  # Memery
+        logger.info('{:>16s} : {:<.3f} [M]'.format('Max Memery', torch.cuda.max_memory_allocated(torch.cuda.current_device())/1024**2))  # Memery
         
         end.record()
         torch.cuda.synchronize()
@@ -135,13 +135,13 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name', type=str, default='SAFMN', help='method name')
-    parser.add_argument('--lr_path', type=str, default='datasets/test', help='Path to the LR image')
+    parser.add_argument('--model_name', type=str, default='LMLT', help='method name')
+    parser.add_argument('--lr_path', type=str, default='/workspace/LMLT/storage/multi_img_x2', help='Path to the LR image')
     parser.add_argument('--log_path', type=str, default='results/', help='Path to log file')
     parser.add_argument('--save_results', action='store_true', help='if true save SR results')
     parser.add_argument('--print_modelsummary', action='store_true', help='if true print modelsummary; set False when calculating `Max Memery` and `Runtime`')
     parser.add_argument('--save_path', type=str, default='results/', help='Path to results')
-    parser.add_argument('--pretrain_model', type=str, default='/data/ECCV/SS/weights/dim84_x2.pth', help='Path to the pretrained model')
+    parser.add_argument('--pretrain_model', type=str, default='/workspace/LMLT/experiments/pretrained_model/LMLT_tiny_x2.pth', help='Path to the pretrained model')
     args = parser.parse_args()
 
     main(args)
